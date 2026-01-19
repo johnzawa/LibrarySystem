@@ -1,11 +1,9 @@
 package service;
-import model.Book;
-import model.BookReservation;
-import model.Hall;
-import model.Member;
+import model.*;
 import model.enums.ReservationStatus;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,14 +15,26 @@ public class LibrarySystem {
     HashMap<Integer, Hall> Halls = new HashMap<>();
     HashMap<Integer, Member> Members = new HashMap<>();
     List<BookReservation> BookReservations = new ArrayList<>();
+    List<HallReservation> HallReservations = new ArrayList<>();
+    List<BookSuggestion> BookSuggestions = new ArrayList<>();
     int bookReservationId;
     int bookId = 1;
+    int hallReservationId;
     int hallId = 1;
     int memberId = 1;
+    int bookSuggestionId = 1;
 
     public boolean isOverlapping(LocalDate startA, LocalDate endA, LocalDate startB, LocalDate endB) {
         return !endA.isBefore(startB) && !endB.isBefore(startA);
     }
+
+    public boolean isOverlappingTime(LocalDate dateA, LocalTime startA, LocalTime endA, LocalDate dateB, LocalTime startB, LocalTime endB) {
+        if (!dateA.isEqual(dateB)) {
+            return false;
+        }
+        return startA.isBefore(endB) && startB.isBefore(endA);
+    }
+
 
     public Member addMember(String name, String email, String password) {
         Member member = new Member(memberId, name, email, password);
@@ -150,5 +160,105 @@ public class LibrarySystem {
         }
         return false;
     }
+
+    public BookSuggestion addBookSuggestion(String title, String author, String publisher, String reason) {
+        LocalDate date = LocalDate.now();
+        BookSuggestions.add(new BookSuggestion(bookSuggestionId++,title,author,publisher,reason,date));
+        return BookSuggestions.getLast();
+    }
+
+    public void seedBookSuggestions() {
+
+        addBookSuggestion(
+                "Clean Architecture",
+                "Robert C. Martin",
+                "Pearson",
+                "Recommended for understanding layered system design"
+        );
+
+        addBookSuggestion(
+                "The Pragmatic Programmer",
+                "Andrew Hunt",
+                "Addison-Wesley",
+                "Frequently referenced in software engineering courses"
+        );
+
+        addBookSuggestion(
+                "Head First Design Patterns",
+                "Eric Freeman",
+                "O'Reilly Media",
+                "Suggested as an easier introduction to design patterns"
+        );
+
+        addBookSuggestion(
+                "Operating System Concepts",
+                "Abraham Silberschatz",
+                "Wiley",
+                "Useful for OS and systems programming studies"
+        );
+
+        addBookSuggestion(
+                "Database System Concepts",
+                "Abraham Silberschatz",
+                "McGraw-Hill",
+                "Requested for database course support"
+        );
+    }
+
+    public HallReservation addHallReservation(Hall hall, Member member, int reservationId, LocalDate date, LocalTime startTime, LocalTime endTime) {
+        //filtering reservations that are for the same book
+        List<HallReservation> filteredList = new ArrayList<>();
+        for (HallReservation reservation : HallReservations) {
+            if (hall.getHallId() == reservation.getHall().getHallId())
+                filteredList.add(reservation);
+        }
+        for (HallReservation reservation : filteredList) {
+            if (isOverlappingTime(date, startTime, endTime, reservation.getDate(), reservation.getStartTime(), reservation.getEndTime()))
+                throw new RuntimeException("overlapping time");
+        }
+        HallReservations.add(new HallReservation(reservationId, member, hall, date, startTime, endTime));
+        return HallReservations.getLast();
+    }
+
+    public void seedHallReservations() {
+
+        addHallReservation(
+                Halls.get(1),      // Main Study Hall
+                Members.get(1),    // Ahmad
+                hallReservationId++,
+                LocalDate.of(2026, 1, 20),
+                LocalTime.of(9, 0),
+                LocalTime.of(11, 0)
+        );
+
+        addHallReservation(
+                Halls.get(1),      // Same hall, later time (no overlap)
+                Members.get(2),    // Sara
+                hallReservationId++,
+                LocalDate.of(2026, 1, 20),
+                LocalTime.of(11, 0),
+                LocalTime.of(12, 30)
+        );
+
+        addHallReservation(
+                Halls.get(2),      // Different hall, same date/time (allowed)
+                Members.get(3),    // Omar
+                hallReservationId++,
+                LocalDate.of(2026, 1, 20),
+                LocalTime.of(10, 0),
+                LocalTime.of(12, 0)
+        );
+
+        addHallReservation(
+                Halls.get(3),      // Computer Lab 1
+                Members.get(4),    // Lina
+                hallReservationId++,
+                LocalDate.of(2026, 1, 21),
+                LocalTime.of(14, 0),
+                LocalTime.of(16, 0)
+        );
+    }
+
+
 
 }

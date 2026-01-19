@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import model.Book;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -81,5 +82,23 @@ public class LibrarySystemTest {
         system.seedBookReservations();
         system.cancelBookReservation(2);
         assertEquals(ReservationStatus.CANCELLED, system.BookReservations.get(2).getStatus());
+    }
+    @Test
+    void isOverlappingTime_shouldReturnTrueIfTimeOverlaps(){
+        LibrarySystem system = new LibrarySystem();
+        LocalDate startDate = LocalDate.parse("2026-02-02");
+        LocalTime startTime = LocalTime.of(12,30);
+        LocalTime endTime = LocalTime.of(13,30);
+        LocalTime startTime1 = LocalTime.of(13,30);
+        LocalTime endTime2 = LocalTime.of(14,30);
+        assertFalse(system.isOverlappingTime(startDate,startTime,endTime,startDate,startTime1,endTime2));
+    }
+    @Test
+    void addHallReservation_shouldStoreHallReservationIfPossible(){
+        LibrarySystem system = new LibrarySystem();
+        system.seedMembers();
+        system.seedHalls();
+        system.seedHallReservations();
+        assertEquals(4,system.HallReservations.size());
     }
 }

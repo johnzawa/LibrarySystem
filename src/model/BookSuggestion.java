@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class BookSuggestion {
     private int suggestionId;
@@ -8,9 +8,9 @@ public class BookSuggestion {
     private String author;
     private String publisher;
     private String reason;
-    private Date suggestionDate;
+    private LocalDate suggestionDate;
 
-    public BookSuggestion(int suggestionId, String title, String author, String publisher, String reason, Date suggestionDate) {
+    public BookSuggestion(int suggestionId, String title, String author, String publisher, String reason, LocalDate suggestionDate) {
         this.suggestionId = suggestionId;
         this.title = title;
         this.author = author;
@@ -23,7 +23,7 @@ public class BookSuggestion {
         return suggestionId;
     }
 
-    public Date getSuggestionDate() {
+    public LocalDate getSuggestionDate() {
         return suggestionDate;
     }
 
@@ -36,7 +36,7 @@ public class BookSuggestion {
     }
 
     public String getPublisher() {
-        return publisher;
+        return  publisher;
     }
 
     public String getReason() {
