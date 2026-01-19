@@ -2,17 +2,16 @@ package model;
 
 import model.enums.ReservationStatus;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class BookReservation {
     private int reservationId;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private Book book;
     private Member member;
     private ReservationStatus status;
-
-    public BookReservation(Book book, Member member, int reservationId, Date reservationDate, Date startDate, Date endDate, ReservationStatus status) {
+    public BookReservation(Book book, Member member, int reservationId, LocalDate startDate, LocalDate endDate, ReservationStatus status) {
         this.reservationId = reservationId;
         this.startDate = startDate;
         this.endDate= endDate;
@@ -25,11 +24,11 @@ public class BookReservation {
         return reservationId;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 

@@ -1,5 +1,6 @@
 package service;
 import model.Book;
+import model.BookReservation;
 import model.Hall;
 import model.Member;
 
@@ -15,6 +16,7 @@ public class LibrarySystem {
     HashMap<Integer, Member> Members = new HashMap<>();
 
     int bookId = 1;
+    int hallId = 1;
     int memberId = 1;
 
     public Member addMember(String name, String email, String password) {
@@ -29,6 +31,30 @@ public class LibrarySystem {
             addMember("Omar Khalil", "omar.k@uni.edu", "library1");
             addMember("Lina Nasser", "lina.n@uni.edu", "lina123");
             addMember("Yousef Mansour", "yousef.m@uni.edu", "yousefpass");
+    }
+
+    public boolean authenticatePassword(int memberId, String password) {
+        if(Members.get(memberId).getPassword().equals(password))
+            return true;
+        else return false;
+    }
+
+    public Hall addHall(String name, int capacity) {
+        Hall hall = new Hall(hallId, name, capacity);
+        Halls.put(hallId++, hall);
+        return hall;
+    }
+
+    public Hall getHallDetails(int hallId) {
+        return Halls.get(hallId);
+    }
+
+    public void seedHalls() {
+        addHall("Main Study Hall", 120);
+        addHall("Conference Hall A", 60);
+        addHall("Computer Lab 1", 40);
+        addHall("Auditorium", 300);
+        addHall("Quiet Reading Room", 25);
     }
 
     public Book addBook(String title, String author) {

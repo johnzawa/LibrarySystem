@@ -35,4 +35,18 @@ public class LibrarySystemTest {
         assertEquals("Ahmad Al-Zawaideh",system.Members.get(1).getName());
         assertEquals("yousefpass",system.Members.get(5).getPassword());
     }
+    @Test
+    void authenticate_checkIfPasswordIsCorrect() {
+        LibrarySystem system = new LibrarySystem();
+        system.seedMembers();
+        assertTrue(system.authenticatePassword(1,"pass123"));
+        assertTrue(system.authenticatePassword(3,"library1"));
+    }
+
+    @Test
+    void addHall_shouldStoreHallInMap() {
+        LibrarySystem system = new LibrarySystem();
+        system.seedHalls();
+        assertEquals("Main Study Hall",system.Halls.get(1).getName());
+    }
 }

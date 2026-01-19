@@ -4,15 +4,17 @@ public class Hall {
     private int hallId;
     private String name;
     private int capacity;
-    private String type;
 
-    public Hall (int hallId, String name, int capacity, String type) {
+    public Hall (int hallId, String name, int capacity) {
         this.hallId = hallId;
         this.name = name;
         this.capacity = capacity;
-        this.type = type;
     }
 
+    @Override
+    public String toString() {
+        return "Hall Name: " + name + "\nHall Capacity: " + capacity + "\n\n";
+    }
     public int getHallId() {
         return hallId;
     }
@@ -23,9 +25,5 @@ public class Hall {
 
     public int getCapacity() {
         return capacity;
-    }
-
-    public String getType() {
-        return type;
     }
 }
