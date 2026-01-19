@@ -1,5 +1,6 @@
 package service;
 
+import model.Member;
 import org.junit.jupiter.api.Test;
 import service.LibrarySystem;
 import model.Book;
@@ -59,5 +60,18 @@ public class LibrarySystemTest {
         assertFalse(system.isOverlapping(startDate1,endDate1,startDate2,endDate2));
         startDate2 = LocalDate.parse("2026-01-16");
         assertTrue(system.isOverlapping(startDate1,endDate1,startDate2,endDate2));
+    }
+    @Test
+    void addBookReservation_shouldStoreBookReservationOnlyIfPossible(){
+        LibrarySystem system = new LibrarySystem();
+        system.seedBooks();
+        system.seedBookReservations();
+        assertEquals(4,system.BookReservations.size());
+        LocalDate startDate = LocalDate.parse("2026-02-02");
+        LocalDate endDate = LocalDate.parse("2026-02-05");
+        Book book = system.Books.get(3);
+        Member member = system.Members.get(2);
+        system.addBookReservation(book,member,5,startDate,endDate);
+        assertEquals(5,system.BookReservations.getLast().getReservationId());
     }
 }

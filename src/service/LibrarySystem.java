@@ -32,15 +32,15 @@ public class LibrarySystem {
     }
 
     public void seedMembers() {
-            addMember("Ahmad Al-Zawaideh", "ahmad.z@uni.edu", "pass123");
-            addMember("Sara Haddad", "sara.h@uni.edu", "password");
-            addMember("Omar Khalil", "omar.k@uni.edu", "library1");
-            addMember("Lina Nasser", "lina.n@uni.edu", "lina123");
-            addMember("Yousef Mansour", "yousef.m@uni.edu", "yousefpass");
+        addMember("Ahmad Al-Zawaideh", "ahmad.z@uni.edu", "pass123");
+        addMember("Sara Haddad", "sara.h@uni.edu", "password");
+        addMember("Omar Khalil", "omar.k@uni.edu", "library1");
+        addMember("Lina Nasser", "lina.n@uni.edu", "lina123");
+        addMember("Yousef Mansour", "yousef.m@uni.edu", "yousefpass");
     }
 
     public boolean authenticatePassword(int memberId, String password) {
-        if(Members.get(memberId).getPassword().equals(password))
+        if (Members.get(memberId).getPassword().equals(password))
             return true;
         else return false;
     }
@@ -68,6 +68,7 @@ public class LibrarySystem {
         Books.put(bookId++, book);
         return book;
     }
+
     public void seedBooks() {
         addBook("Clean Code", "Robert C. Martin");
         addBook("Effective Java", "Joshua Bloch");
@@ -78,10 +79,10 @@ public class LibrarySystem {
 
     public List<Book> searchBooks(String title) {
         List<Book> results = new ArrayList<>();
-            for (Book book:Books.values()) {
-                if(book.getTitle().toLowerCase().contains(title.toLowerCase()))
-                    results.add(book);
-            }
+        for (Book book : Books.values()) {
+            if (book.getTitle().toLowerCase().contains(title.toLowerCase()))
+                results.add(book);
+        }
         return results;
     }
 
@@ -89,5 +90,62 @@ public class LibrarySystem {
         return Books.get(bookId);
     }
 
+    public BookReservation addBookReservation(Book book, Member member, int reservationId, LocalDate startDate, LocalDate endDate) {
+        if (BookReservations.isEmpty()) {
+            BookReservations.add(new BookReservation(book, member, reservationId, startDate, endDate));
+            return BookReservations.getLast();
+        }
+        //filtering reservations that are for the same book
+        List<BookReservation> filteredList = new ArrayList<>();
+        for (BookReservation reservation : BookReservations) {
+            if (book.getBookId() == reservation.getBook().getBookId())
+                filteredList.add(reservation);
+        }
+        if (filteredList.isEmpty()) {
+            BookReservations.add(new BookReservation(book, member, reservationId, startDate, endDate));
+            return BookReservations.getLast();
+        }
+        for (BookReservation reservation : filteredList) {
+            if (isOverlapping(startDate, endDate, reservation.getStartDate(), reservation.getEndDate()))
+                throw new RuntimeException("overlapping date");
+        }
+        BookReservations.add(new BookReservation(book, member, reservationId, startDate, endDate));
+        return BookReservations.getLast();
+    }
+
+    public void seedBookReservations() {
+
+        addBookReservation(
+                Books.get(1),
+                Members.get(2),
+                bookReservationId++,
+                LocalDate.of(2026, 1, 10),
+                LocalDate.of(2026, 1, 20)
+        );
+
+        addBookReservation(
+                Books.get(3),
+                Members.get(1),
+                bookReservationId++,
+                LocalDate.of(2025, 12, 1),
+                LocalDate.of(2025, 12, 15)
+        );
+
+        addBookReservation(
+                Books.get(4),
+                Members.get(4),
+                bookReservationId++,
+                LocalDate.of(2026, 2, 1),
+                LocalDate.of(2026, 2, 10)
+        );
+
+        addBookReservation(
+                Books.get(5),
+                Members.get(3),
+                bookReservationId++,
+                LocalDate.of(2025, 11, 5),
+                LocalDate.of(2025, 11, 18)
+        );
+    }
 
 }

@@ -11,11 +11,11 @@ public class BookReservation {
     private Book book;
     private Member member;
     private ReservationStatus status;
-    public BookReservation(Book book, Member member, int reservationId, LocalDate startDate, LocalDate endDate, ReservationStatus status) {
+    public BookReservation(Book book, Member member, int reservationId, LocalDate startDate, LocalDate endDate) {
         this.reservationId = reservationId;
         this.startDate = startDate;
         this.endDate= endDate;
-        this.status = status;
+        status = ReservationStatus.CONFIRMED;
         this.book = book;
         this.member = member;
     }
