@@ -28,5 +28,11 @@ public class LibrarySystemTest {
         results = system.searchBooks("refactor");
         assertEquals("Refactoring", results.getFirst().getTitle());
     }
-
+    @Test
+    void addMember_shouldStoreMemberInMap() {
+        LibrarySystem system = new LibrarySystem();
+        system.seedMembers();
+        assertEquals("Ahmad Al-Zawaideh",system.Members.get(1).getName());
+        assertEquals("yousefpass",system.Members.get(5).getPassword());
+    }
 }
