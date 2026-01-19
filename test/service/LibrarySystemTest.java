@@ -1,8 +1,8 @@
 package service;
 
 import model.Member;
+import model.enums.ReservationStatus;
 import org.junit.jupiter.api.Test;
-import service.LibrarySystem;
 import model.Book;
 
 import java.time.LocalDate;
@@ -73,5 +73,13 @@ public class LibrarySystemTest {
         Member member = system.Members.get(2);
         system.addBookReservation(book,member,5,startDate,endDate);
         assertEquals(5,system.BookReservations.getLast().getReservationId());
+    }
+    @Test
+    void cancelBookReservation_shouldCancelBookReservationIfExists(){
+        LibrarySystem system = new LibrarySystem();
+        system.seedBooks();
+        system.seedBookReservations();
+        system.cancelBookReservation(2);
+        assertEquals(ReservationStatus.CANCELLED, system.BookReservations.get(2).getStatus());
     }
 }

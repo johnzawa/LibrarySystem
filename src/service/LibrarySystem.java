@@ -3,6 +3,7 @@ import model.Book;
 import model.BookReservation;
 import model.Hall;
 import model.Member;
+import model.enums.ReservationStatus;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -91,19 +92,11 @@ public class LibrarySystem {
     }
 
     public BookReservation addBookReservation(Book book, Member member, int reservationId, LocalDate startDate, LocalDate endDate) {
-        if (BookReservations.isEmpty()) {
-            BookReservations.add(new BookReservation(book, member, reservationId, startDate, endDate));
-            return BookReservations.getLast();
-        }
         //filtering reservations that are for the same book
         List<BookReservation> filteredList = new ArrayList<>();
         for (BookReservation reservation : BookReservations) {
             if (book.getBookId() == reservation.getBook().getBookId())
                 filteredList.add(reservation);
-        }
-        if (filteredList.isEmpty()) {
-            BookReservations.add(new BookReservation(book, member, reservationId, startDate, endDate));
-            return BookReservations.getLast();
         }
         for (BookReservation reservation : filteredList) {
             if (isOverlapping(startDate, endDate, reservation.getStartDate(), reservation.getEndDate()))
@@ -146,6 +139,16 @@ public class LibrarySystem {
                 LocalDate.of(2025, 11, 5),
                 LocalDate.of(2025, 11, 18)
         );
+    }
+
+    public boolean cancelBookReservation(int bookReservationId) {
+        for (BookReservation bookReservation : BookReservations) {
+            if (bookReservationId == bookReservation.getReservationId()) {
+                bookReservation.setStatus(ReservationStatus.CANCELLED);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

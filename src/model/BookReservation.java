@@ -24,6 +24,14 @@ public class BookReservation {
         return reservationId;
     }
 
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
+
     public LocalDate getStartDate() {
         return startDate;
     }
