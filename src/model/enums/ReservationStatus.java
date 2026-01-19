@@ -1,4 +1,7 @@
 package model.enums;
 
-public class ReservationStatus {
+enum ReservationStatus {
+    PENDING,
+    CONFIRMED,
+    CANCELLED
 }
