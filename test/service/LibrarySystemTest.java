@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import service.LibrarySystem;
 import model.Book;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,11 +43,21 @@ public class LibrarySystemTest {
         assertTrue(system.authenticatePassword(1,"pass123"));
         assertTrue(system.authenticatePassword(3,"library1"));
     }
-
     @Test
     void addHall_shouldStoreHallInMap() {
         LibrarySystem system = new LibrarySystem();
         system.seedHalls();
         assertEquals("Main Study Hall",system.Halls.get(1).getName());
+    }
+    @Test
+    void isOverlapping_checkIfDatesAreOverlapping() {
+        LibrarySystem system = new LibrarySystem();
+        LocalDate startDate1 = LocalDate.parse("2026-01-15");
+        LocalDate endDate1 = LocalDate.parse("2026-01-18");
+        LocalDate startDate2 = LocalDate.parse("2026-01-19");
+        LocalDate endDate2 = LocalDate.parse("2026-01-22");
+        assertFalse(system.isOverlapping(startDate1,endDate1,startDate2,endDate2));
+        startDate2 = LocalDate.parse("2026-01-16");
+        assertTrue(system.isOverlapping(startDate1,endDate1,startDate2,endDate2));
     }
 }

@@ -4,6 +4,7 @@ import model.BookReservation;
 import model.Hall;
 import model.Member;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +15,15 @@ public class LibrarySystem {
     HashMap<Integer, Book> Books = new HashMap<>();
     HashMap<Integer, Hall> Halls = new HashMap<>();
     HashMap<Integer, Member> Members = new HashMap<>();
-
+    List<BookReservation> BookReservations = new ArrayList<>();
+    int bookReservationId;
     int bookId = 1;
     int hallId = 1;
     int memberId = 1;
+
+    public boolean isOverlapping(LocalDate startA, LocalDate endA, LocalDate startB, LocalDate endB) {
+        return !endA.isBefore(startB) && !endB.isBefore(startA);
+    }
 
     public Member addMember(String name, String email, String password) {
         Member member = new Member(memberId, name, email, password);
