@@ -1,6 +1,6 @@
 package model.enums;
 
-enum BookStatus {
+public enum BookStatus {
     AVAILABLE,
     RESERVED,
     LOST
