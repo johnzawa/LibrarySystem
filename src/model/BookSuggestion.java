@@ -19,6 +19,10 @@ public class BookSuggestion {
         this.suggestionDate = suggestionDate;
     }
 
+    @Override
+    public String toString(){
+        return "Title: " + title + "\nAuthor: " + author + "\nPublisher: " + publisher + "\nReason: " + reason + "\nDate: " + suggestionDate;
+    }
     public int getSuggestionId() {
         return suggestionId;
     }

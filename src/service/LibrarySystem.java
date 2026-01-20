@@ -16,9 +16,9 @@ public class LibrarySystem {
     public HashMap<Integer, Book> Books = new HashMap<>();
     public HashMap<Integer, Hall> Halls = new HashMap<>();
     public HashMap<Integer, Member> Members = new HashMap<>();
-    List<BookReservation> BookReservations = new ArrayList<>();
-    List<HallReservation> HallReservations = new ArrayList<>();
-    List<BookSuggestion> BookSuggestions = new ArrayList<>();
+    public List<BookReservation> BookReservations = new ArrayList<>();
+    public List<HallReservation> HallReservations = new ArrayList<>();
+    public List<BookSuggestion> BookSuggestions = new ArrayList<>();
     int bookReservationId = 1;
     int bookId = 1;
     int hallReservationId = 1;
@@ -211,7 +211,7 @@ public class LibrarySystem {
         );
     }
 
-    public HallReservation addHallReservation(Hall hall, Member member, int reservationId, LocalDate date, LocalTime startTime, LocalTime endTime) {
+    public HallReservation addHallReservation(Hall hall, Member member, LocalDate date, LocalTime startTime, LocalTime endTime) {
         //filtering reservations that are for the same book
         List<HallReservation> filteredList = new ArrayList<>();
         for (HallReservation reservation : HallReservations) {
@@ -222,7 +222,7 @@ public class LibrarySystem {
             if (isOverlappingTime(date, startTime, endTime, reservation.getDate(), reservation.getStartTime(), reservation.getEndTime()))
                 throw new RuntimeException("overlapping time");
         }
-        HallReservations.add(new HallReservation(reservationId, member, hall, date, startTime, endTime));
+        HallReservations.add(new HallReservation(hallReservationId++, member, hall, date, startTime, endTime));
         return HallReservations.getLast();
     }
 
@@ -261,7 +261,6 @@ public class LibrarySystem {
         addHallReservation(
                 Halls.get(1),
                 Members.get(1),
-                hallReservationId++,
                 LocalDate.of(2026, 1, 20),
                 LocalTime.of(9, 0),
                 LocalTime.of(11, 0)
@@ -270,7 +269,6 @@ public class LibrarySystem {
         addHallReservation(
                 Halls.get(2),
                 Members.get(2),
-                hallReservationId++,
                 LocalDate.of(2026, 1, 20),
                 LocalTime.of(11, 0),
                 LocalTime.of(13, 0)
@@ -279,7 +277,6 @@ public class LibrarySystem {
         addHallReservation(
                 Halls.get(4),
                 Members.get(3),
-                hallReservationId++,
                 LocalDate.of(2026, 1, 21),
                 LocalTime.of(10, 0),
                 LocalTime.of(12, 0)
@@ -288,7 +285,6 @@ public class LibrarySystem {
         addHallReservation(
                 Halls.get(6),
                 Members.get(4),
-                hallReservationId++,
                 LocalDate.of(2026, 1, 21),
                 LocalTime.of(13, 0),
                 LocalTime.of(15, 0)
@@ -297,7 +293,6 @@ public class LibrarySystem {
         addHallReservation(
                 Halls.get(7),
                 Members.get(5),
-                hallReservationId++,
                 LocalDate.of(2026, 1, 22),
                 LocalTime.of(9, 0),
                 LocalTime.of(11, 0)
@@ -306,7 +301,6 @@ public class LibrarySystem {
         addHallReservation(
                 Halls.get(8),
                 Members.get(1),
-                hallReservationId++,
                 LocalDate.of(2026, 1, 22),
                 LocalTime.of(11, 0),
                 LocalTime.of(13, 0)
@@ -315,7 +309,6 @@ public class LibrarySystem {
         addHallReservation(
                 Halls.get(10),
                 Members.get(2),
-                hallReservationId++,
                 LocalDate.of(2026, 1, 23),
                 LocalTime.of(10, 0),
                 LocalTime.of(13, 0)
@@ -324,7 +317,6 @@ public class LibrarySystem {
         addHallReservation(
                 Halls.get(12),
                 Members.get(3),
-                hallReservationId++,
                 LocalDate.of(2026, 1, 24),
                 LocalTime.of(14, 0),
                 LocalTime.of(17, 0)
@@ -333,7 +325,6 @@ public class LibrarySystem {
         addHallReservation(
                 Halls.get(13),
                 Members.get(4),
-                hallReservationId++,
                 LocalDate.of(2026, 1, 25),
                 LocalTime.of(9, 0),
                 LocalTime.of(11, 0)
