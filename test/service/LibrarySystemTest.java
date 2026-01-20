@@ -1,6 +1,8 @@
 package service;
 
+import model.Hall;
 import model.Member;
+import model.enums.HallType;
 import model.enums.ReservationStatus;
 import org.junit.jupiter.api.Test;
 import model.Book;
@@ -81,7 +83,7 @@ public class LibrarySystemTest {
         system.seedBooks();
         system.seedBookReservations();
         system.cancelBookReservation(2);
-        assertEquals(ReservationStatus.CANCELLED, system.BookReservations.get(2).getStatus());
+        assertEquals(ReservationStatus.CANCELLED, system.BookReservations.get(1).getStatus());
     }
     @Test
     void isOverlappingTime_shouldReturnTrueIfTimeOverlaps(){
@@ -99,6 +101,31 @@ public class LibrarySystemTest {
         system.seedMembers();
         system.seedHalls();
         system.seedHallReservations();
-        assertEquals(4,system.HallReservations.size());
+        assertEquals(9,system.HallReservations.size());
+    }
+
+    @Test
+    void searchHalls_shouldShowApplicableHalls() {
+        LibrarySystem system = new LibrarySystem();
+        system.seedMembers();
+        system.seedHalls();
+        system.seedHallReservations();
+        List<Hall> searchResults = system.searchHalls(LocalDate.parse("2026-01-20"), LocalTime.of(10,0), LocalTime.of(12,0), 40, HallType.STUDY );
+        assertEquals(1, searchResults.size());
+        searchResults = system.searchHalls(LocalDate.parse("2026-01-20"), LocalTime.of(11,0), LocalTime.of(13,0), 100, HallType.STUDY );
+        assertEquals(1, searchResults.size());
+        searchResults = system.searchHalls(LocalDate.parse("2026-01-20"), LocalTime.of(13,0), LocalTime.of(15,0), 100, HallType.STUDY );
+        assertEquals(2, searchResults.size());
+    }
+
+    @Test
+    void cancelHallReservation_shouldCancelHallReservationIfExists(){
+        LibrarySystem system = new LibrarySystem();
+        system.seedMembers();
+        system.seedHalls();
+        system.seedHallReservations();
+        assertTrue(system.cancelHallReservation(2));
+        system.cancelHallReservation(2);
+        assertEquals(ReservationStatus.CANCELLED, system.HallReservations.get(1).getStatus());
     }
 }

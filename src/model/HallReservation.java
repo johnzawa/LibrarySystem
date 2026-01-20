@@ -48,4 +48,8 @@ public class HallReservation {
     public ReservationStatus getStatus() {
         return status;
     }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
 }

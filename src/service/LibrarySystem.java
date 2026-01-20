@@ -1,11 +1,13 @@
 package service;
 import model.*;
+import model.enums.HallType;
 import model.enums.ReservationStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class LibrarySystem {
@@ -17,9 +19,9 @@ public class LibrarySystem {
     List<BookReservation> BookReservations = new ArrayList<>();
     List<HallReservation> HallReservations = new ArrayList<>();
     List<BookSuggestion> BookSuggestions = new ArrayList<>();
-    int bookReservationId;
+    int bookReservationId = 1;
     int bookId = 1;
-    int hallReservationId;
+    int hallReservationId = 1;
     int hallId = 1;
     int memberId = 1;
     int bookSuggestionId = 1;
@@ -56,8 +58,8 @@ public class LibrarySystem {
         else return false;
     }
 
-    public Hall addHall(String name, int capacity) {
-        Hall hall = new Hall(hallId, name, capacity);
+    public Hall addHall(String name, int capacity, HallType type) {
+        Hall hall = new Hall(hallId, name, capacity, type);
         Halls.put(hallId++, hall);
         return hall;
     }
@@ -67,11 +69,19 @@ public class LibrarySystem {
     }
 
     public void seedHalls() {
-        addHall("Main Study Hall", 120);
-        addHall("Conference Hall A", 60);
-        addHall("Computer Lab 1", 40);
-        addHall("Auditorium", 300);
-        addHall("Quiet Reading Room", 25);
+        addHall("Main Study Hall", 200, HallType.STUDY);
+        addHall("Study Hall 2", 120, HallType.STUDY);
+        addHall("Study Hall 3", 50, HallType.STUDY);
+        addHall("Conference Hall A", 60, HallType.CONFERENCE);
+        addHall("Conference Hall B", 30, HallType.CONFERENCE);
+        addHall("Conference Hall C", 100, HallType.CONFERENCE);
+        addHall("Computer Lab 1", 100, HallType.COMPUTER);
+        addHall("Computer Lab 2", 70, HallType.COMPUTER);
+        addHall("Computer Lab 3", 50, HallType.COMPUTER);
+        addHall("Auditorium A", 300, HallType.AUDITORIUM);
+        addHall("Auditorium B", 200, HallType.AUDITORIUM);
+        addHall("Auditorium C", 500, HallType.AUDITORIUM);
+        addHall("Quiet Reading Room", 50, HallType.READING);
     }
 
     public Book addBook(String title, String author) {
@@ -220,11 +230,41 @@ public class LibrarySystem {
         return HallReservations.getLast();
     }
 
+    public boolean cancelHallReservation(int hallReservationId) {
+        for (HallReservation hallReservation : HallReservations) {
+            if (hallReservationId == hallReservation.getReservationId()) {
+                hallReservation.setStatus(ReservationStatus.CANCELLED);
+                return true;
+            }
+        }
+        return false;
+    }
+    public List<Hall> searchHalls(LocalDate date, LocalTime startTime, LocalTime endTime, int expectedAttendees, HallType type) {
+        List<Hall> filteredList = new ArrayList<>();
+        int hallId;
+        for(Hall hall : Halls.values())
+            if(hall.getType()==type)
+                if(expectedAttendees<=hall.getCapacity())
+                    filteredList.add(hall);
+
+        for(HallReservation hallReservation : HallReservations)
+            if(isOverlappingTime(hallReservation.getDate(), hallReservation.getStartTime(), hallReservation.getEndTime(), date, startTime, endTime)) {
+                hallId = hallReservation.getHall().getHallId();
+                Iterator<Hall> iterator = filteredList.iterator();
+                while(iterator.hasNext()) {
+                    Hall hall = iterator.next();
+                    if(hall.getHallId()==hallId)
+                        iterator.remove();
+                }
+            }
+        return filteredList;
+    }
+
     public void seedHallReservations() {
 
         addHallReservation(
-                Halls.get(1),      // Main Study Hall
-                Members.get(1),    // Ahmad
+                Halls.get(1),
+                Members.get(1),
                 hallReservationId++,
                 LocalDate.of(2026, 1, 20),
                 LocalTime.of(9, 0),
@@ -232,33 +272,77 @@ public class LibrarySystem {
         );
 
         addHallReservation(
-                Halls.get(1),      // Same hall, later time (no overlap)
-                Members.get(2),    // Sara
+                Halls.get(2),
+                Members.get(2),
                 hallReservationId++,
                 LocalDate.of(2026, 1, 20),
                 LocalTime.of(11, 0),
-                LocalTime.of(12, 30)
+                LocalTime.of(13, 0)
         );
 
         addHallReservation(
-                Halls.get(2),      // Different hall, same date/time (allowed)
-                Members.get(3),    // Omar
+                Halls.get(4),
+                Members.get(3),
                 hallReservationId++,
-                LocalDate.of(2026, 1, 20),
+                LocalDate.of(2026, 1, 21),
                 LocalTime.of(10, 0),
                 LocalTime.of(12, 0)
         );
 
         addHallReservation(
-                Halls.get(3),      // Computer Lab 1
-                Members.get(4),    // Lina
+                Halls.get(6),
+                Members.get(4),
                 hallReservationId++,
                 LocalDate.of(2026, 1, 21),
+                LocalTime.of(13, 0),
+                LocalTime.of(15, 0)
+        );
+
+        addHallReservation(
+                Halls.get(7),
+                Members.get(5),
+                hallReservationId++,
+                LocalDate.of(2026, 1, 22),
+                LocalTime.of(9, 0),
+                LocalTime.of(11, 0)
+        );
+
+        addHallReservation(
+                Halls.get(8),
+                Members.get(1),
+                hallReservationId++,
+                LocalDate.of(2026, 1, 22),
+                LocalTime.of(11, 0),
+                LocalTime.of(13, 0)
+        );
+
+        addHallReservation(
+                Halls.get(10),
+                Members.get(2),
+                hallReservationId++,
+                LocalDate.of(2026, 1, 23),
+                LocalTime.of(10, 0),
+                LocalTime.of(13, 0)
+        );
+
+        addHallReservation(
+                Halls.get(12),
+                Members.get(3),
+                hallReservationId++,
+                LocalDate.of(2026, 1, 24),
                 LocalTime.of(14, 0),
-                LocalTime.of(16, 0)
+                LocalTime.of(17, 0)
+        );
+
+        addHallReservation(
+                Halls.get(13),
+                Members.get(4),
+                hallReservationId++,
+                LocalDate.of(2026, 1, 25),
+                LocalTime.of(9, 0),
+                LocalTime.of(11, 0)
         );
     }
-
 
 
 }
