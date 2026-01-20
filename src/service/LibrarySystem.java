@@ -13,9 +13,9 @@ import java.util.List;
 public class LibrarySystem {
 
     // Storage for data
-    HashMap<Integer, Book> Books = new HashMap<>();
-    HashMap<Integer, Hall> Halls = new HashMap<>();
-    HashMap<Integer, Member> Members = new HashMap<>();
+    public HashMap<Integer, Book> Books = new HashMap<>();
+    public HashMap<Integer, Hall> Halls = new HashMap<>();
+    public HashMap<Integer, Member> Members = new HashMap<>();
     List<BookReservation> BookReservations = new ArrayList<>();
     List<HallReservation> HallReservations = new ArrayList<>();
     List<BookSuggestion> BookSuggestions = new ArrayList<>();
@@ -111,7 +111,7 @@ public class LibrarySystem {
         return Books.get(bookId);
     }
 
-    public BookReservation addBookReservation(Book book, Member member, int reservationId, LocalDate startDate, LocalDate endDate) {
+    public BookReservation addBookReservation(Book book, Member member, LocalDate startDate, LocalDate endDate) {
         //filtering reservations that are for the same book
         List<BookReservation> filteredList = new ArrayList<>();
         for (BookReservation reservation : BookReservations) {
@@ -122,7 +122,7 @@ public class LibrarySystem {
             if (isOverlapping(startDate, endDate, reservation.getStartDate(), reservation.getEndDate()))
                 throw new RuntimeException("overlapping date");
         }
-        BookReservations.add(new BookReservation(book, member, reservationId, startDate, endDate));
+        BookReservations.add(new BookReservation(book, member, bookReservationId++, startDate, endDate));
         return BookReservations.getLast();
     }
 
@@ -131,7 +131,6 @@ public class LibrarySystem {
         addBookReservation(
                 Books.get(1),
                 Members.get(2),
-                bookReservationId++,
                 LocalDate.of(2026, 1, 10),
                 LocalDate.of(2026, 1, 20)
         );
@@ -139,7 +138,6 @@ public class LibrarySystem {
         addBookReservation(
                 Books.get(3),
                 Members.get(1),
-                bookReservationId++,
                 LocalDate.of(2025, 12, 1),
                 LocalDate.of(2025, 12, 15)
         );
@@ -147,7 +145,6 @@ public class LibrarySystem {
         addBookReservation(
                 Books.get(4),
                 Members.get(4),
-                bookReservationId++,
                 LocalDate.of(2026, 2, 1),
                 LocalDate.of(2026, 2, 10)
         );
@@ -155,7 +152,6 @@ public class LibrarySystem {
         addBookReservation(
                 Books.get(5),
                 Members.get(3),
-                bookReservationId++,
                 LocalDate.of(2025, 11, 5),
                 LocalDate.of(2025, 11, 18)
         );

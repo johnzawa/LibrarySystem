@@ -17,7 +17,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Title: " + title + "\nAuthor: " + author + "\nBook Status: " + status + "\n\n";
+        return "Book ID: " + bookId +"\nTitle: " + title + "\nAuthor: " + author + "\nBook Status: " + status + "\n\n";
     }
 
     public int getBookId() {

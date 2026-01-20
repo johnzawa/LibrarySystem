@@ -74,7 +74,7 @@ public class LibrarySystemTest {
         LocalDate endDate = LocalDate.parse("2026-02-05");
         Book book = system.Books.get(3);
         Member member = system.Members.get(2);
-        system.addBookReservation(book,member,5,startDate,endDate);
+        system.addBookReservation(book,member,startDate,endDate);
         assertEquals(5,system.BookReservations.getLast().getReservationId());
     }
     @Test
